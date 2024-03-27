@@ -1,0 +1,78 @@
+The Bellman-Ford algorithm is used to find the shortest path from a single source vertex to all other vertices in a graph that may contain negative edge weights.
+
+
+//Description: this is the main function for the Bellman-Fprd algorithm. The vertices and edges represent their list present in the graph. The source is the the starting vertex for the shortest path.
+procedure BellmanFord(list vertices, list edges, vertex source)
+    //Description: The distance represents an array that stores the minimum distance from the vertex source to each other vertex in the graph. It is set to 0.   
+    distance[source] := 0
+    //Description: This is a loop that repeats |V|-1 times; |V| being the number of vertices in the graph. This is because the longest path possible in any graph |V|-1 edges. 
+    repeat |V|−1 times:
+        //Description: This loop iterates over all edges in the graph.
+        for each edge (a, b, w) in edges:
+            //Description: This checks if the distance to vertex b can be improved by going through vertex a.
+            if distance[a] + w < distance[b]:
+                If the distance to vertex b can be improved, update the distance to b.
+                distance[b] := distance[a] + w
+                //Description: Setting the predecessor of vertex b to vertex a.
+                predecessor[b] := a
+    //Description: This loop iterates over all edges in the graph again.
+    for each edge (a, b, w) in edges:
+        //Description: This checks if there is a negative-weight cycle in the graph.
+        if distance[a] + w < distance[b]:
+            //Description: If there is a negative-weight cycle, the algorithm exits with an error.
+            error "Graph contains a negative-weight cycle"
+
+
+
+The A* algorithm is used to find the shortest path from a single source vertex to a target vertex in a graph. It is commonly used in pathfinding problems, such as finding the shortest route between two points on a map.
+
+
+//Description: This is the main function for the A* algorithm. start is for the starting node for the pathfinding. goal is for the target node for the pathfinding.
+procedure A*(start,goal)
+    //Description: closedSet is for a set of nodes that have been evaluated.
+    closedSet := {}
+    //Description: openSet is a set of nodes that are still not evaluated.
+    openSet := {start}
+    //Description: cameFrom acts like a dictionary that maps each node to its parent.
+    cameFrom := {}
+    //Description: gScore is a dictionary that stores the estimated total cost from start to goal through each node, witht a default value of infinity for each node.
+    gScore := map with default value of infinity
+    //Description: This sets gScore for the start node to a value of 0, since the cost of the path from the start node to itself is 0.
+    gScore[start] := 0
+    //Description: This creates a new dictionary called fScore with a default value of infinity for each node. It's similar to the gScore initialization, but for the fscore map instead.
+    fScore := map with default value of infinity
+    //This sets the initial value of fScore to the start node. The heuristic_cost_estimate is a function that estimates the cost of the cheapest path from the start node to the goal node, without actually computing the full path.
+    //It is a heuristic function that provides an estimate of the remaining cost to reach the goal from the current node.
+    fScore[start] := heuristic_cost_estimate(start, goal)
+    //Description: This loop continues until all nodes have been evaluated or a path is found to the goal (if it's not empty).
+    while openSet is not empty
+    //Description: The current selects the node with the lowest fScore value as the current node.
+        current := the node in openSet having the lowest fScore value
+        //Description: If the current node is the goal, then a path has been found, so it reconstructs and returns the path.
+        if current = goal
+            return reconstruct_path(cameFrom, goal)
+        //Description: This removes the current node from the open set.
+        openSet.Remove(current)
+        //Description: This adds the current node to the closed set.
+        closedSet.Add(current)
+        //Description: This for loop iterates over each neighbor of the current node.
+        for each neighbor of current
+            //Description: If the neighbor node has already been evaluated, it skips it.
+            if neighbor in closedSet
+                continue
+            //Description: This calculates the tentative gScore, which is the cost of the path from start to neighbor through the current node.
+            tentative_gScore := gScore[current] + distance_between(current, neighbor)
+            //Description: If the neighbor node has not been evaluated yet, it adds it to the open set.
+            if neighbor not in openSet
+                openSet.Add(neighbor)
+            //Description: If the tentative gScore is greater than or equal to the gScore of the neighbor node, it skips it.
+            else if tentative_gScore >= gScore[neighbor]
+                continue
+            Updates the parent of the neighbor node to the current node.
+            cameFrom[neighbor] := current
+            //Desciption: it updates the gScore of the neighbor node.
+            gScore[neighbor] := tentative_gScore
+            //Description: This updates the fScore of the neighbor node using the heuristic cost estimate. The Heuristic estimation technique uses "rules of thumb" or certain generally acceptable rules for estimation.
+            fScore[neighbor] := gScore[neighbor] + heuristic_cost_estimate(neighbor, goal)
+    //Description: If the goal node is not found, then there is no path from the start node to the goal node.
+    return "No path found"
